@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include "CalculatorHistory.h"
+#include "CalculatorSave.h"
 
 using namespace std;
 using namespace CalculationManager;
@@ -47,6 +48,7 @@ unsigned int CalculatorHistory::AddToHistory(
     spHistoryItem->historyItemVector.spCommands = commands;
     spHistoryItem->historyItemVector.expression = GetGeneratedExpression(*tokens);
     spHistoryItem->historyItemVector.result = wstring(result);
+
     return AddItem(spHistoryItem);
 }
 
@@ -58,6 +60,10 @@ unsigned int CalculatorHistory::AddItem(_In_ shared_ptr<HISTORYITEM> const& spHi
     }
 
     m_historyItems.push_back(spHistoryItem);
+    
+    std::unique_ptr<CalculatorSave> save = make_unique<CalculatorSave>("C:\\Users\\samsung user\\Documents\\GitHub\\calculator\\history.txt");
+    save->SaveHistory(GetHistory());
+
     return static_cast<unsigned>(m_historyItems.size() - 1);
 }
 
